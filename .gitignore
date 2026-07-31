@@ -1,19 +1,64 @@
-# Node
-node_modules/
-frontend/node_modules/
+# ======================
+# Backend
+# ======================
 
-# Build
-dist/
-frontend/dist/
-
-# Python
 backend/venv/
-__pycache__/
-*.pyc
+backend/__pycache__/
+backend/**/*.pyc
 
-# Environment
-.env
 backend/.env
+backend/.env.*
 
+backend/helix.db
+
+backend/*.log
+
+# ======================
+# Frontend
+# ======================
+
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+frontend/.vite/
+
+frontend/.env
+frontend/.env.*
+
+frontend/*.local
+
+# ======================
+# Python
+# ======================
+
+*.pyc
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# ======================
+# Logs
+# ======================
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ======================
 # VS Code
+# ======================
+
 .vscode/
+.idea/
+
+# ======================
+# OS Files
+# ======================
+
+.DS_Store
+Thumbs.db

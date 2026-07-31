@@ -1,4 +1,7 @@
 from app.database.database import Base
 
-# Import all models here so SQLAlchemy registers them.
-# We will add these imports as we create each model.
+from app.models.user import User
+from app.models.incident import Incident
+from app.models.notification import Notification
+from app.models.ai_report import AIReport
+from app.models.incident_timeline import IncidentTimeline
