@@ -1,0 +1,25 @@
+.layout{
+    display:flex;
+    min-height:100vh;
+    background:#0b1120;
+}
+.main-content{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.page-content{
+    flex:1;
+    padding:24px;
+    background:#f8fafc;
+    overflow-y:auto;
+    overflow-x:hidden;
+    height:calc(100vh - 75px);
+}
+.page-wrapper{
+    width:100%;
+    max-width:1450px;
+}

@@ -1,0 +1,26 @@
+.executive-card{
+    background:#fff;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+}
+
+.executive-card h2{
+    margin-bottom:20px;
+}
+
+.action-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 0;
+    border-bottom:1px solid #edf2f7;
+}
+
+.action-item:last-child{
+    border-bottom:none;
+}
+
+.action-item svg{
+    color:#16a34a;
+}

@@ -1,0 +1,39 @@
+.domain-card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+}
+
+.domain-card h2{
+    margin-bottom:24px;
+}
+
+.domain-item{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.progress{
+    height:10px;
+    background:#e2e8f0;
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:24px;
+}
+
+.fill{
+    height:100%;
+}
+
+.manufacturing{
+    width:78%;
+    background:#2563eb;
+}
+
+.healthcare{
+    width:22%;
+    background:#10b981;
+}

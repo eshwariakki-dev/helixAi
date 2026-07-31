@@ -1,0 +1,37 @@
+.decision-card{
+    background:#fff;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+}
+
+.decision-card h2{
+    margin-bottom:20px;
+}
+
+.decision-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    border-bottom:1px solid #edf2f7;
+}
+
+.decision-item:last-child{
+    border-bottom:none;
+}
+
+.decision-left{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.priority{
+    background:#fef3c7;
+    color:#92400e;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
