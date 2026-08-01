@@ -1,37 +1,57 @@
+import { useEffect, useState } from "react";
 import {
   AlertTriangle,
   HeartPulse,
   ShieldAlert,
 } from "lucide-react";
 
+import { getIncidents } from "../../api/incidentApi";
+
 import "../../styles/dashboard/liveIncidentFeed.css";
 
 function LiveIncidentFeed() {
 
-  const incidents = [
+  const [incidents, setIncidents] = useState([]);
 
-    {
-      icon:<AlertTriangle size={18}/>,
-      title:"Machine Failure",
-      domain:"Manufacturing",
-      severity:"Critical"
-    },
+  useEffect(() => {
 
-    {
-      icon:<HeartPulse size={18}/>,
-      title:"ICU Bed Shortage",
-      domain:"Healthcare",
-      severity:"High"
-    },
+    const loadIncidents = async () => {
 
-    {
-      icon:<ShieldAlert size={18}/>,
-      title:"Worker Safety Alert",
-      domain:"Manufacturing",
-      severity:"Medium"
+      try {
+
+        const data = await getIncidents();
+         console.log(data);
+
+        setIncidents(data.slice(0, 5));
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+    loadIncidents();
+
+  }, []);
+
+  const getIcon = (sector) => {
+
+    switch (sector) {
+
+      case "Healthcare":
+        return <HeartPulse size={18} />;
+
+      case "Manufacturing":
+        return <AlertTriangle size={18} />;
+
+      default:
+        return <ShieldAlert size={18} />;
+
     }
 
-  ];
+  };
 
   return (
 
@@ -39,10 +59,10 @@ function LiveIncidentFeed() {
 
       <h2>Live Incident Feed</h2>
 
-      {incidents.map((item,index)=>(
+      {incidents.map((item) => (
 
         <div
-          key={index}
+          key={item.id}
           className="feed-item"
         >
 
@@ -50,7 +70,7 @@ function LiveIncidentFeed() {
 
             <div className="feed-icon">
 
-              {item.icon}
+              {getIcon(item.sector)}
 
             </div>
 
@@ -58,17 +78,18 @@ function LiveIncidentFeed() {
 
               <h4>{item.title}</h4>
 
-              <p>{item.domain}</p>
+              <p>{item.sector}</p>
 
             </div>
 
           </div>
 
           <span
-  className={`severity ${item.severity.toLowerCase()}`}
->
-  {item.severity}
-</span>
+            className={`severity ${item.severity.toLowerCase()}`}
+          >
+            {item.severity}
+          </span>
+
         </div>
 
       ))}

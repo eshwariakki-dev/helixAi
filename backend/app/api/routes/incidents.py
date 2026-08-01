@@ -1,3 +1,9 @@
+from fastapi import File, Form, UploadFile
+import os
+from uuid import uuid4
+
+
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -20,21 +26,16 @@ from app.schemas.status import StatusUpdate
 
 from app.services.incident_service import IncidentService
 
+from app.schemas.incident import IncidentResponse
 router = APIRouter(
     prefix="/incidents",
     tags=["Incidents"]
 )
 
-
 @router.post("/", response_model=IncidentAnalysisResponse)
 def create_incident(
     incident: IncidentCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(
-        require_roles(
-            ["Admin", "Analyst", "Operator"]
-        )
-    ),
 ):
     return IncidentService.create_incident(
         db,
@@ -48,11 +49,6 @@ def get_all_incidents(
     severity: str | None = Query(None),
     status: str | None = Query(None),
     db: Session = Depends(get_db),
-    current_user: User = Depends(
-        require_roles(
-            ["Admin", "Analyst", "Executive"]
-        )
-    ),
 ):
     return IncidentService.get_all_incidents(
         db=db,
@@ -66,11 +62,6 @@ def get_all_incidents(
 def get_incident(
     incident_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(
-        require_roles(
-            ["Admin", "Analyst", "Executive"]
-        )
-    ),
 ):
     incident = IncidentService.get_incident(
         db,
@@ -113,9 +104,11 @@ def update_incident_status(
             )
 
         return {
-            "message": "Incident status updated successfully",
-            "incident": incident,
-        }
+    "message": "Incident status updated successfully",
+    "incident": IncidentResponse.model_validate(
+        incident
+    ).model_dump(),
+}
 
     except ValueError as e:
 

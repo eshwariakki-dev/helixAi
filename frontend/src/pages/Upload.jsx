@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createIncident } from "../api/incidentApi";
+
 import {
   UploadCloud,
   Brain,
@@ -10,9 +13,21 @@ import "../styles/upload/upload.css";
 
 function Upload() {
 
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
   const [fileName, setFileName] = useState("");
 
-  const handleFileChange = (e) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    sector: "Manufacturing",
+    category: "Machine Failure",
+    severity: "Critical",
+    location: "",
+    description: "",
+  });
+    const handleFileChange = (e) => {
 
     if (e.target.files.length > 0) {
       setFileName(e.target.files[0].name);
@@ -20,7 +35,62 @@ function Upload() {
 
   };
 
-  return (
+  const handleChange = (e) => {
+
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
+  };
+
+  const handleSubmit = async () => {
+
+    if (!formData.location.trim()) {
+      alert("Location is required.");
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      alert("Description is required.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+
+      const payload = {
+        ...formData,
+        title:
+          formData.title ||
+          `${formData.category} - ${formData.location}`,
+      };
+
+      const result = await createIncident(payload);
+
+      console.log("Incident Created:", result);
+
+      alert("Incident analyzed successfully!");
+
+      navigate("/decision-center", {
+        state: result,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Failed to analyze incident.");
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+    return (
 
     <div className="upload-page">
 
@@ -48,7 +118,11 @@ function Upload() {
 
               <label>Domain</label>
 
-              <select>
+              <select
+                name="sector"
+                value={formData.sector}
+                onChange={handleChange}
+              >
 
                 <option>Manufacturing</option>
                 <option>Healthcare</option>
@@ -61,7 +135,11 @@ function Upload() {
 
               <label>Incident Type</label>
 
-              <select>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+              >
 
                 <option>Machine Failure</option>
                 <option>Worker Safety</option>
@@ -80,7 +158,11 @@ function Upload() {
 
               <label>Priority</label>
 
-              <select>
+              <select
+                name="severity"
+                value={formData.severity}
+                onChange={handleChange}
+              >
 
                 <option>Critical</option>
                 <option>High</option>
@@ -97,6 +179,9 @@ function Upload() {
 
               <input
                 type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
                 placeholder="Plant A / Hospital B"
               />
 
@@ -110,12 +195,14 @@ function Upload() {
 
             <textarea
               rows="6"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
               placeholder="Describe the incident..."
             ></textarea>
 
           </div>
-
-          <div className="upload-box">
+                    <div className="upload-box">
 
             <UploadCloud size={48} />
 
@@ -144,17 +231,23 @@ function Upload() {
 
           )}
 
-          <button className="analyze-btn">
+          <button
+            type="button"
+            className="analyze-btn"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
 
             <Brain size={20} />
 
-            Analyze Incident
+            {loading
+              ? "Analyzing Incident..."
+              : "Analyze Incident"}
 
           </button>
 
         </div>
-
-        <div className="ai-card">
+                <div className="ai-card">
 
           <h2>AI Processing Pipeline</h2>
 
@@ -162,7 +255,7 @@ function Upload() {
 
             <div>
 
-              <CheckCircle size={18}/>
+              <CheckCircle size={18} />
 
               OCR & Document Reading
 
@@ -170,7 +263,7 @@ function Upload() {
 
             <div>
 
-              <CheckCircle size={18}/>
+              <CheckCircle size={18} />
 
               Incident Classification
 
@@ -178,7 +271,7 @@ function Upload() {
 
             <div>
 
-              <CheckCircle size={18}/>
+              <CheckCircle size={18} />
 
               Risk Prediction
 
@@ -186,7 +279,7 @@ function Upload() {
 
             <div>
 
-              <CheckCircle size={18}/>
+              <CheckCircle size={18} />
 
               Ripple Analysis
 
@@ -194,7 +287,7 @@ function Upload() {
 
             <div>
 
-              <CheckCircle size={18}/>
+              <CheckCircle size={18} />
 
               Executive Recommendation
 
@@ -209,14 +302,16 @@ function Upload() {
             <h1>5-10 sec</h1>
 
             <p>
+
               AI analyzes uploaded evidence and prepares recommendations.
+
             </p>
 
           </div>
 
         </div>
 
-      </div>
+            </div>
 
     </div>
 

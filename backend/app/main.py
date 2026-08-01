@@ -7,11 +7,24 @@ from app.api.routes.incidents import router as incident_router
 from app.api.routes.dashboard import router as dashboard_router
 from app.api.routes.ai_reports import router as ai_report_router
 from app.api.routes.timeline import router as timeline_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title="HELIX AI",
     description="Connected Decision Intelligence Platform",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

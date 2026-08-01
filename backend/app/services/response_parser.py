@@ -1,4 +1,17 @@
+import re
+
 class ResponseParser:
+
+    @staticmethod
+    def clean_text(text: str) -> str:
+
+        text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
+
+        text = re.sub(r"^[-*]\s*", "", text)
+
+        text = re.sub(r"\n{2,}", "\n", text)
+
+        return text.strip()
 
     @staticmethod
     def parse(text: str) -> dict:
@@ -58,6 +71,8 @@ class ResponseParser:
                 sections[current_section] += line + "\n"
 
         for key in sections:
-            sections[key] = sections[key].strip()
 
+            sections[key] = ResponseParser.clean_text(
+        sections[key]
+    )
         return sections

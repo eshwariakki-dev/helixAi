@@ -1,18 +1,69 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { getIncident } from "../api/incidentApi";
+
 import "../styles/incident/incidentDetails.css";
 
-function IncidentDetails() {
+    function IncidentDetails() {
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [incident, setIncident] = useState(null);
+
+  useEffect(() => {
+
+    const loadIncident = async () => {
+
+      try {
+
+        const data = await getIncident(id);
+
+        setIncident(data);
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+    loadIncident();
+
+  }, [id]);
+
+  if (!incident) {
+
+    return <h2>Loading...</h2>;
+
+  }
+
+
   return (
     <div className="details-page">
 
       <div className="details-header">
         <div>
           <h1>Incident Details</h1>
-          <p>Manufacturing Incident • Machine Failure</p>
+          <p>
+  {incident.sector} • {incident.category}
+</p>
         </div>
 
-        <button className="ai-btn">
-          Analyze with AI
-        </button>
+        <button
+  className="ai-btn"
+  onClick={() =>
+    navigate("/analytics", {
+      state: {
+        incident,
+      },
+    })
+  }
+>
+  Analyze with AI
+</button>
       </div>
 
       <div className="details-grid">
@@ -23,69 +74,78 @@ function IncidentDetails() {
 
           <div className="info-row">
             <span>ID</span>
-            <strong>INC-101</strong>
+<strong>INC-{incident.id}</strong>
           </div>
 
           <div className="info-row">
             <span>Domain</span>
-            <strong>Manufacturing</strong>
+            <strong>{incident.sector}</strong>
           </div>
 
           <div className="info-row">
             <span>Incident</span>
-            <strong>Machine Failure</strong>
+            <strong>{incident.category}</strong>
           </div>
 
           <div className="info-row">
             <span>Status</span>
-            <strong className="open">Open</strong>
+            <strong className="open">{incident.status}</strong>
           </div>
 
           <div className="info-row">
             <span>Severity</span>
-            <strong className="critical">Critical</strong>
+            <strong className="critical">{incident.severity}</strong>
           </div>
 
         </div>
 
         <div className="details-card">
 
-          <h3>Affected Systems</h3>
+  <h3>Description</h3>
 
-          <ul>
+  <p>{incident.description}</p>
 
-            <li>Machine A12</li>
-            <li>Assembly Line 2</li>
-            <li>Inventory Module</li>
-            <li>Maintenance Team</li>
-
-          </ul>
-
-        </div>
+</div>
 
       </div>
 
       <div className="timeline-card">
 
-        <h3>Incident Timeline</h3>
+  <h3>Incident Details</h3>
 
-        <div className="timeline-item">
-          09:10 AM • Machine stopped unexpectedly
-        </div>
+  <div className="timeline-item">
 
-        <div className="timeline-item">
-          09:14 AM • Production halted
-        </div>
+    Created:
+    {" "}
+    {new Date(incident.created_at).toLocaleString()}
 
-        <div className="timeline-item">
-          09:20 AM • Maintenance notified
-        </div>
+  </div>
 
-        <div className="timeline-item">
-          09:35 AM • AI Analysis started
-        </div>
+  <div className="timeline-item">
 
-      </div>
+    Status:
+    {" "}
+    {incident.status}
+
+  </div>
+
+  <div className="timeline-item">
+
+    Severity:
+    {" "}
+    {incident.severity}
+
+  </div>
+
+  <div className="timeline-item">
+
+    Location:
+    {" "}
+    {incident.location}
+
+  </div>
+
+</div>
 
     </div>
   );

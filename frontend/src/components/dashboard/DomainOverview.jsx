@@ -1,48 +1,102 @@
+import { useEffect, useState } from "react";
+
+import { getDashboardSummary } from "../../api/dashboardApi";
+
 import "../../styles/dashboard/domainOverview.css";
 
-function DomainOverview(){
+function DomainOverview() {
 
-    return(
+  const [summary, setSummary] = useState(null);
 
-        <div className="domain-card">
+  useEffect(() => {
 
-            <h2>Domain Overview</h2>
+    const loadData = async () => {
 
-            <div className="domain-item">
+      try {
 
-                <span>Manufacturing</span>
+        const data = await getDashboardSummary();
 
-                <strong>78%</strong>
+        setSummary(data.summary);
 
-            </div>
+      } catch (error) {
 
-            <div className="progress">
+        console.error(error);
 
-                <div
-                className="fill manufacturing"
-                ></div>
+      }
 
-            </div>
+    };
 
-            <div className="domain-item">
+    loadData();
 
-                <span>Healthcare</span>
+  }, []);
 
-                <strong>22%</strong>
+  if (!summary) {
 
-            </div>
+    return <div className="domain-card">Loading...</div>;
 
-            <div className="progress">
+  }
 
-                <div
-                className="fill healthcare"
-                ></div>
+  const total =
+    summary.healthcare_incidents +
+    summary.manufacturing_incidents;
 
-            </div>
+  const manufacturing =
+    total === 0
+      ? 0
+      : Math.round(
+          (summary.manufacturing_incidents / total) * 100
+        );
 
-        </div>
+  const healthcare =
+    total === 0
+      ? 0
+      : Math.round(
+          (summary.healthcare_incidents / total) * 100
+        );
 
-    );
+  return (
+
+    <div className="domain-card">
+
+      <h2>Domain Overview</h2>
+
+      <div className="domain-item">
+
+        <span>Manufacturing</span>
+
+        <strong>{manufacturing}%</strong>
+
+      </div>
+
+      <div className="progress">
+
+        <div
+          className="fill manufacturing"
+          style={{ width: `${manufacturing}%` }}
+        ></div>
+
+      </div>
+
+      <div className="domain-item">
+
+        <span>Healthcare</span>
+
+        <strong>{healthcare}%</strong>
+
+      </div>
+
+      <div className="progress">
+
+        <div
+          className="fill healthcare"
+          style={{ width: `${healthcare}%` }}
+        ></div>
+
+      </div>
+
+    </div>
+
+  );
 
 }
 

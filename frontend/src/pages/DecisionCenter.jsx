@@ -1,60 +1,66 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Brain,
   ShieldCheck,
   DollarSign,
   Clock3,
   CheckCircle,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 import "../styles/decision/decisionCenter.css";
 
 function DecisionCenter() {
 
-  const decisions = [
-    {
-      title: "Option A",
-      action: "Immediate Maintenance",
-      score: 96,
-      cost: "$14,500",
-      downtime: "2 Hours",
-      risk: "Low",
-      recommended: true,
-      reasons: [
-        "Lowest operational risk",
-        "Failure probability reduced by 94%",
-        "Fastest recovery plan",
-      ],
-    },
-    {
-      title: "Option B",
-      action: "Continue Production",
-      score: 63,
-      cost: "$6,000",
-      downtime: "None",
-      risk: "High",
-      recommended: false,
-      reasons: [
-        "Lowest immediate cost",
-        "High failure probability",
-        "Production continues",
-      ],
-    },
-    {
-      title: "Option C",
-      action: "Reduce Production Load",
-      score: 81,
-      cost: "$9,200",
-      downtime: "30 Minutes",
-      risk: "Medium",
-      recommended: false,
-      reasons: [
-        "Balances production",
-        "Reduces equipment stress",
-        "Medium operational risk",
-      ],
-    },
-  ];
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
+  const data = location.state;
+
+  const decisions = data
+    ? [
+        {
+          title: "AI Recommended Decision",
+
+          action:
+            data.executive_report?.executive_recommendation ||
+            data.executive_report?.immediate_actions ||
+            "No recommendation available",
+
+          score: data.analysis?.risk_score || 0,
+
+          cost:
+            data.executive_report?.resource_requirements ||
+            "Not Available",
+
+          downtime:
+            data.executive_report?.estimated_recovery_time ||
+            "Not Available",
+
+          risk:
+            data.analysis?.priority ||
+            "Unknown",
+
+          recommended: true,
+
+          reasons: [
+
+            data.executive_report?.business_impact ||
+            "Business impact unavailable",
+
+            data.executive_report?.operational_impact ||
+            "Operational impact unavailable",
+
+            data.executive_report?.immediate_actions ||
+            "No immediate actions",
+
+          ],
+
+        },
+
+      ]
+    : [];
 
   return (
 
@@ -72,9 +78,37 @@ function DecisionCenter() {
 
         </div>
 
-        <button className="execute-btn">
-          Execute Recommended Action
-        </button>
+        <button
+  className="execute-btn"
+  onClick={() =>
+    navigate("/analytics", {
+      state: data,
+    })
+  }
+>
+  View AI Analysis
+</button>
+
+<button
+  className="execute-btn"
+  onClick={() =>
+    navigate("/ripple-analysis", {
+      state: data,
+    })
+  }
+>
+  View Ripple Analysis
+</button>
+<button
+  className="execute-btn"
+  onClick={() =>
+    navigate("/chaos-simulation", {
+      state: data,
+    })
+  }
+>
+  View Chaos Simulation
+</button>
 
       </div>
 
@@ -82,41 +116,49 @@ function DecisionCenter() {
 
         <div>
 
-          <Brain size={22}/>
+          <Brain size={22} />
 
           <span>AI Confidence</span>
 
-          <strong>96%</strong>
+          <strong>
+            {data?.analysis?.risk_score || 0}%
+          </strong>
 
         </div>
 
         <div>
 
-          <DollarSign size={22}/>
+          <DollarSign size={22} />
 
-          <span>Estimated Savings</span>
+          <span>Business Impact</span>
 
-          <strong>$120K</strong>
+          <strong>
+            {data?.analysis?.business_impact || "N/A"}
+          </strong>
 
         </div>
 
         <div>
 
-          <Clock3 size={22}/>
+          <Clock3 size={22} />
 
           <span>Recovery Time</span>
 
-          <strong>2 Hours</strong>
+          <strong>
+            {data?.executive_report?.estimated_recovery_time || "N/A"}
+          </strong>
 
         </div>
 
         <div>
 
-          <ShieldCheck size={22}/>
+          <ShieldCheck size={22} />
 
           <span>Business Risk</span>
 
-          <strong>Low</strong>
+          <strong>
+            {data?.analysis?.priority || "N/A"}
+          </strong>
 
         </div>
 
@@ -124,24 +166,24 @@ function DecisionCenter() {
 
       <div className="decision-grid">
 
-        {decisions.map((item,index)=>(
+        {decisions.map((item, index) => (
 
           <div
             key={index}
             className={`decision-card ${item.recommended ? "recommended" : ""}`}
           >
 
-            {item.recommended &&
+            {item.recommended && (
 
               <div className="recommended-badge">
 
-                <Sparkles size={16}/>
+                <Sparkles size={16} />
 
                 AI Recommended
 
               </div>
 
-            }
+            )}
 
             <h2>{item.title}</h2>
 
@@ -159,7 +201,9 @@ function DecisionCenter() {
 
               <div
                 className="progress-fill"
-                style={{width:`${item.score}%`}}
+                style={{
+                  width: `${item.score}%`,
+                }}
               ></div>
 
             </div>
@@ -168,7 +212,7 @@ function DecisionCenter() {
 
               <div>
 
-                <DollarSign size={18}/>
+                <DollarSign size={18} />
 
                 {item.cost}
 
@@ -176,7 +220,7 @@ function DecisionCenter() {
 
               <div>
 
-                <Clock3 size={18}/>
+                <Clock3 size={18} />
 
                 {item.downtime}
 
@@ -184,7 +228,7 @@ function DecisionCenter() {
 
               <div>
 
-                <ShieldCheck size={18}/>
+                <ShieldCheck size={18} />
 
                 {item.risk}
 
@@ -196,11 +240,14 @@ function DecisionCenter() {
 
               <h4>Why AI selected this</h4>
 
-              {item.reasons.map((reason,i)=>(
+              {item.reasons.map((reason, i) => (
 
-                <div key={i} className="reason">
+                <div
+                  key={i}
+                  className="reason"
+                >
 
-                  <CheckCircle size={16}/>
+                  <CheckCircle size={16} />
 
                   {reason}
 

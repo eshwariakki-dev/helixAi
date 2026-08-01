@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models.incident import Incident
@@ -151,6 +152,15 @@ class IncidentService:
             )
 
         incident.status = new_status
+
+        if new_status == "Assigned":
+            incident.assigned_at = datetime.utcnow()
+
+        elif new_status == "Resolved":
+            incident.resolved_at = datetime.utcnow()
+
+        elif new_status == "Closed":
+            incident.closed_at = datetime.utcnow()
 
         db.commit()
         db.refresh(incident)

@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import {
   AlertTriangle,
   Brain,
@@ -14,6 +15,21 @@ import {
 import "../styles/simulation/chaosSimulation.css";
 
 function ChaosSimulation() {
+    const location = useLocation();
+
+  const data = location.state;
+
+  const incident = data?.incident;
+
+  const chaos = data?.chaos;
+
+  const report = data?.executive_report;
+
+  const analysis = data?.analysis;
+
+  const firstScenario = chaos?.scenarios?.[0];
+  console.log(data);
+console.log(report);
   return (
     <div className="chaos-page">
 
@@ -43,27 +59,31 @@ function ChaosSimulation() {
 
         <div className="summary-card">
 
-          <AlertTriangle size={26} />
+        <AlertTriangle size={26} />
 
-          <span>Overall Risk</span>
+        <span>Overall Risk</span>
 
-          <strong>92%</strong>
+        <strong>{analysis?.risk_score}%</strong>
 
-          <p>Critical</p>
+        <p>{analysis?.priority}</p>
 
-        </div>
+      </div>
 
-        <div className="summary-card">
+      <div className="summary-card">
 
-          <Clock3 size={26} />
+        <Clock3 size={26} />
 
-          <span>Recovery Time</span>
+        <span>Recovery Time</span>
 
-          <strong>4 hrs</strong>
+        <strong>
+  {report?.estimated_recovery_time ||
+   firstScenario?.downtime ||
+   "Not Available"}
+</strong>
 
-          <p>Estimated</p>
+        <p>Estimated</p>
 
-        </div>
+      </div>
 
         <div className="summary-card">
 
@@ -71,7 +91,7 @@ function ChaosSimulation() {
 
           <span>AI Confidence</span>
 
-          <strong>96%</strong>
+          <strong>{analysis?.risk_score}%</strong>
 
           <p>Prediction Accuracy</p>
 
@@ -79,209 +99,200 @@ function ChaosSimulation() {
 
         <div className="summary-card">
 
-          <DollarSign size={26} />
+  <DollarSign size={26} />
 
-          <span>Estimated Savings</span>
+  <span>Financial Impact</span>
 
-          <strong>$120K</strong>
+  <strong>
+    {firstScenario?.financial_loss || "Not Available"}
+  </strong>
 
-          <p>If Recommended Action Taken</p>
+  <p>
+    {firstScenario?.business_impact || "Unknown"}
+  </p>
 
-        </div>
+</div>
 
       </div>
 
       <div className="scenario-card">
 
-        <h2>Simulation Scenario</h2>
+  <h2>Simulation Scenarios</h2>
 
-        <select>
+  <select>
 
-          <option>Manufacturing • Machine Failure</option>
+    {chaos?.scenarios?.map((scenario, index) => (
 
-          <option>Manufacturing • Worker Safety</option>
+      <option key={index}>
 
-          <option>Manufacturing • Production Delay</option>
+        {scenario.scenario}
 
-          <option>Healthcare • ICU Bed Shortage</option>
+      </option>
 
-          <option>Healthcare • Medicine Shortage</option>
+    ))}
 
-          <option>Healthcare • Equipment Failure</option>
+  </select>
 
-        </select>
-
-      </div>
+</div>
 
       <div className="result-grid">
 
         <div className="result-card">
 
-          <h3>Overall Risk Assessment</h3>
+  <h3>Overall Risk Assessment</h3>
 
-          <div className="risk-bar">
+  <div className="risk-bar">
 
-            <div
-              className="risk-fill"
-              style={{ width: "92%" }}
-            ></div>
+    <div
+      className="risk-fill"
+      style={{
+        width: `${analysis?.risk_score || 0}%`,
+      }}
+    ></div>
 
-          </div>
+  </div>
 
-          <h1 className="risk-value">
+  <h1 className="risk-value">
 
-            92%
+    {analysis?.risk_score || 0}%
 
-          </h1>
+  </h1>
 
-          <p>Critical operational impact predicted.</p>
+  <p>
 
-        </div>
+    {analysis?.priority} operational impact predicted.
 
-        <div className="result-card">
+  </p>
 
-          <h3>Business Impact</h3>
-
-          <div className="impact-list">
-
-            <div className="impact-item">
-
-              <Factory size={18}/>
-
-              <span>Production</span>
-
-              <strong>High</strong>
-
-            </div>
-
-            <div className="impact-item">
-
-              <Package size={18}/>
-
-              <span>Inventory</span>
-
-              <strong>Medium</strong>
-
-            </div>
-
-            <div className="impact-item">
-
-              <Truck size={18}/>
-
-              <span>Logistics</span>
-
-              <strong>Critical</strong>
-
-            </div>
-
-            <div className="impact-item">
-
-              <Users size={18}/>
-
-              <span>Workforce</span>
-
-              <strong>Low</strong>
-
-            </div>
-
-          </div>
-
-        </div>
+</div>
 
         <div className="result-card">
 
-          <h3>Recovery Estimate</h3>
+  <h3>Simulation Scenarios</h3>
 
-          <h1>4 Hours</h1>
+  <div className="impact-list">
 
-          <p>Expected operational recovery.</p>
+    {chaos?.scenarios?.map((scenario, index) => (
 
-          <div className="confidence-row">
+      <div
+        key={index}
+        className="impact-item"
+      >
 
-            <span>AI Confidence</span>
+        <Factory size={18} />
 
-            <strong>96%</strong>
+        <span>{scenario.scenario}</span>
 
-          </div>
+        <strong>{scenario.business_impact}</strong>
 
-        </div>
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+        <div className="result-card">
+
+  <h3>Recovery Estimate</h3>
+
+  <h1>
+
+    {firstScenario?.downtime || "Not Available"}
+
+  </h1>
+
+  <p>
+
+    Expected operational recovery.
+
+  </p>
+
+  <div className="confidence-row">
+
+    <span>Scenario Probability</span>
+
+    <strong>
+
+      {firstScenario?.probability || 0}%
+
+    </strong>
+
+  </div>
+
+</div>
 
       </div>
 
       <div className="prediction-card">
 
-        <div className="prediction-title">
+  <div className="prediction-title">
 
-          <Sparkles size={20}/>
+    <Sparkles size={20} />
 
-          <h2>Executive Recommendation</h2>
+    <h2>Executive Recommendation</h2>
 
-        </div>
+  </div>
 
-        <div className="recommendation-list">
+  <div className="recommendation-list">
 
-          <div>
+    <div>
 
-            ✅ Stop Machine A12 Immediately
+      {report?.executive_recommendation ||
+       report?.immediate_actions ||
+       "No recommendation available."}
 
-          </div>
+    </div>
 
-          <div>
+  </div>
 
-            ✅ Dispatch Maintenance Team
+  <div className="executive-grid">
 
-          </div>
+    <div>
 
-          <div>
+      <DollarSign size={20} />
 
-            ✅ Reallocate Inventory
+      <span>Financial Impact</span>
 
-          </div>
+      <strong>
 
-          <div>
+        {firstScenario?.financial_loss || "N/A"}
 
-            ✅ Notify Logistics Partners
+      </strong>
 
-          </div>
+    </div>
 
-        </div>
+    <div>
 
-        <div className="executive-grid">
+      <ShieldCheck size={20} />
 
-          <div>
+      <span>Business Impact</span>
 
-            <DollarSign size={20}/>
+      <strong>
 
-            <span>Estimated Savings</span>
+        {firstScenario?.business_impact || "N/A"}
 
-            <strong>$120,000</strong>
+      </strong>
 
-          </div>
+    </div>
 
-          <div>
+    <div>
 
-            <ShieldCheck size={20}/>
+      <Clock3 size={20} />
 
-            <span>Risk Reduction</span>
+      <span>Recovery Time</span>
 
-            <strong>91%</strong>
+      <strong>
 
-          </div>
+        {firstScenario?.downtime || "N/A"}
 
-          <div>
+      </strong>
 
-            <Clock3 size={20}/>
+    </div>
 
-            <span>Recovery Time</span>
+  </div>
 
-            <strong>4 Hours</strong>
-
-          </div>
-
-        </div>
-
-      </div>
-
+</div>
     </div>
   );
 }

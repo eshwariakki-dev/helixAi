@@ -1,50 +1,72 @@
 import { Link } from "react-router-dom";
-import { Eye, Pencil, Search, Plus, Factory, HeartPulse } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Eye, Search, Plus, Factory, HeartPulse } from "lucide-react";
 import "../styles/incident/incidentManagement.css";
+import { getIncidents } from "../api/incidentApi";
+
 function IncidentManagement() {
 
-  const incidents = [
-    {
-      id: "INC-101",
-      domain: "Manufacturing",
-      icon: <Factory size={18} />,
-      incident: "Machine Failure",
-      severity: "Critical",
-      status: "Open",
-      time: "2 mins ago",
-      owner: "Maintenance Team",
-    },
-    {
-      id: "INC-102",
-      domain: "Healthcare",
-      icon: <HeartPulse size={18} />,
-      incident: "ICU Bed Shortage",
-      severity: "High",
-      status: "In Progress",
-      time: "15 mins ago",
-      owner: "Hospital Admin",
-    },
-    {
-      id: "INC-103",
-      domain: "Manufacturing",
-      icon: <Factory size={18} />,
-      incident: "Worker Safety Alert",
-      severity: "Medium",
-      status: "Resolved",
-      time: "45 mins ago",
-      owner: "Safety Officer",
-    },
-    {
-      id: "INC-104",
-      domain: "Healthcare",
-      icon: <HeartPulse size={18} />,
-      incident: "Medicine Shortage",
-      severity: "Low",
-      status: "Open",
-      time: "1 hour ago",
-      owner: "Pharmacy Team",
-    },
-  ];
+  const [incidents, setIncidents] = useState([]);
+  const [search, setSearch] = useState("");
+
+const [domainFilter, setDomainFilter] = useState("All Domains");
+
+const [severityFilter, setSeverityFilter] = useState("All Severity");
+
+const [statusFilter, setStatusFilter] = useState("All Status");
+useEffect(() => {
+
+  const loadIncidents = async () => {
+
+    try {
+
+      const data = await getIncidents();
+
+      setIncidents(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  loadIncidents();
+
+}, []);
+
+const filteredIncidents = incidents.filter((item) => {
+
+  const matchesSearch =
+    item.category
+      ?.toLowerCase()
+      .includes(search.toLowerCase()) ||
+    item.sector
+      ?.toLowerCase()
+      .includes(search.toLowerCase()) ||
+    String(item.id).includes(search);
+
+  const matchesDomain =
+    domainFilter === "All Domains" ||
+    item.sector === domainFilter;
+
+  const matchesSeverity =
+    severityFilter === "All Severity" ||
+    item.severity === severityFilter;
+
+  const matchesStatus =
+    statusFilter === "All Status" ||
+    item.status === statusFilter;
+
+  return (
+    matchesSearch &&
+    matchesDomain &&
+    matchesSeverity &&
+    matchesStatus
+  );
+
+});
 
   return (
     <div className="incident-page">
@@ -61,35 +83,47 @@ function IncidentManagement() {
 
         </div>
 
-        <button className="new-incident-btn">
-
-          <Plus size={18} />
-
-          Report New Incident
-
-        </button>
+        
 
       </div>
 
       <div className="incident-stats">
 
         <div className="stat-card">
-          <h2>126</h2>
+          <h2>{incidents.length}</h2>
           <p>Total Incidents</p>
         </div>
 
         <div className="stat-card critical-card">
-          <h2>18</h2>
+          <h2>
+
+  {incidents.filter(
+    i => i.severity === "Critical"
+  ).length}
+
+</h2>
           <p>Critical</p>
         </div>
 
         <div className="stat-card progress-card">
-          <h2>32</h2>
+          <h2>
+
+  {incidents.filter(
+    i => i.status === "Investigating"
+  ).length}
+
+</h2>
           <p>In Progress</p>
         </div>
 
         <div className="stat-card resolved-card">
-          <h2>76</h2>
+          <h2>
+
+  {incidents.filter(
+    i => i.status === "Resolved"
+  ).length}
+
+</h2>
           <p>Resolved</p>
         </div>
 
@@ -102,28 +136,36 @@ function IncidentManagement() {
           <Search size={18} />
 
           <input
-            type="text"
-            placeholder="Search incidents..."
-          />
+  type="text"
+  placeholder="Search incidents..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+/>
 
         </div>
 
-        <select>
-          <option>All Domains</option>
+        <select
+  value={domainFilter}
+  onChange={(e) => setDomainFilter(e.target.value)}
+>
           <option>Manufacturing</option>
           <option>Healthcare</option>
         </select>
 
-        <select>
-          <option>All Severity</option>
+       <select
+  value={severityFilter}
+  onChange={(e) => setSeverityFilter(e.target.value)}
+>
           <option>Critical</option>
           <option>High</option>
           <option>Medium</option>
           <option>Low</option>
         </select>
 
-        <select>
-          <option>All Status</option>
+        <select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+>
           <option>Open</option>
           <option>In Progress</option>
           <option>Resolved</option>
@@ -159,31 +201,37 @@ function IncidentManagement() {
 
           <tbody>
 
-            {incidents.map((item) => (
+           {filteredIncidents.map((item) => (
 
               <tr key={item.id}>
 
-                <td>{item.id}</td>
+               <td>INC-{item.id}</td>
 
                 <td>
 
-                  <div className="incident-info">
+                 <td>
 
-                    <div className="incident-icon">
+  <div className="incident-info">
 
-                      {item.icon}
+    <div className="incident-icon">
 
-                    </div>
+      {item.sector === "Healthcare"
+        ? <HeartPulse size={18} />
+        : <Factory size={18} />}
 
-                    <div>
+    </div>
 
-                      <strong>{item.incident}</strong>
+    <div>
 
-                      <p>{item.domain}</p>
+      <strong>{item.category}</strong>
 
-                    </div>
+      <p>{item.sector}</p>
 
-                  </div>
+    </div>
+
+  </div>
+
+</td>
 
                 </td>
 
@@ -211,26 +259,26 @@ function IncidentManagement() {
 
                 </td>
 
-                <td>{item.time}</td>
+                <td>
 
-                <td>{item.owner}</td>
+  {new Date(item.created_at).toLocaleString()}
+
+</td>
+
+                <td>System</td>
 
                 <td>
 
                   <div className="action-buttons">
 
                     <Link
-  to={`/incidents/${item.id}`}
-  className="view-btn"
->
-  <Eye size={16} />
-</Link>
+                          to={`/incidents/${item.id}`}
+                          className="view-btn"
+                        >
+                            <Eye size={16} />
+                          </Link>
 
-                    <button className="edit-btn">
-
-                      <Pencil size={16} />
-
-                    </button>
+                    
 
                   </div>
 

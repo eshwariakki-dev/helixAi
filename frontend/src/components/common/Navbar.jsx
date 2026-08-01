@@ -1,4 +1,4 @@
-import { Bell, Search, UserCircle } from "lucide-react";
+import { Bell, UserCircle } from "lucide-react";
 import "../../styles/navbar.css";
 
 function Navbar() {
@@ -10,10 +10,8 @@ function Navbar() {
       </div>
 
       <div className="navbar-right">
-        <div className="search">
-          <Search size={18} />
-          <input type="text" placeholder="Search..." />
-        </div>
+
+       
 
         <Bell className="icon" />
         <UserCircle className="icon" />

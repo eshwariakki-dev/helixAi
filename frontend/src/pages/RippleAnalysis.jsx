@@ -1,3 +1,5 @@
+import { useLocation } from "react-router-dom";
+
 import {
   AlertTriangle,
   Activity,
@@ -11,6 +13,17 @@ import {
 import "../styles/ripple/rippleAnalysis.css";
 
 function RippleAnalysis() {
+    const location = useLocation();
+
+    const data = location.state;
+
+    const incident = data?.incident;
+
+    const ripple = data?.ripple;
+
+    const report = data?.executive_report;
+
+
   return (
     <div className="ripple-page">
 
@@ -31,178 +44,201 @@ function RippleAnalysis() {
 
       <div className="summary-grid">
 
-        <div className="summary-card incident">
+  <div className="summary-card incident">
 
-          <div className="summary-icon">
-            <AlertTriangle size={30}/>
-          </div>
+    <div className="summary-icon">
+      <AlertTriangle size={30} />
+    </div>
 
-          <div>
-            <h3>Incident</h3>
-            <h2>Machine Failure</h2>
-            <p>Production Line A12</p>
-          </div>
+    <div>
 
-        </div>
+      <h3>Incident</h3>
 
-        <div className="summary-card risk">
+      <h2>{incident?.category}</h2>
 
-          <div className="summary-icon">
-            <Activity size={30}/>
-          </div>
-
-          <div>
-            <h3>Overall Risk</h3>
-            <h2>92%</h2>
-            <p>Critical Impact</p>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div className="ripple-card">
-
-        <h2>Primary Ripple Effects</h2>
-
-        <div className="impact-list">
-
-          <div className="impact-item">
-            <Package size={22}/>
-            <div>
-              <h4>Production Delay</h4>
-              <p>Probability 96%</p>
-            </div>
-            <ArrowRight size={18}/>
-          </div>
-
-          <div className="impact-item">
-            <Package size={22}/>
-            <div>
-              <h4>Inventory Shortage</h4>
-              <p>Probability 82%</p>
-            </div>
-            <ArrowRight size={18}/>
-          </div>
-
-          <div className="impact-item">
-            <Package size={22}/>
-            <div>
-              <h4>Quality Issues</h4>
-              <p>Probability 74%</p>
-            </div>
-            <ArrowRight size={18}/>
-          </div>
-
-          <div className="impact-item">
-            <Package size={22}/>
-            <div>
-              <h4>Worker Reallocation</h4>
-              <p>Probability 61%</p>
-            </div>
-            <ArrowRight size={18}/>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div className="two-column">
-
-        <div className="ripple-card">
-
-          <h2>Secondary Effects</h2>
-
-          <ul className="effect-list">
-
-            <li>
-              <Truck size={18}/>
-              Supplier Delay
-            </li>
-
-            <li>
-              <Truck size={18}/>
-              Delivery Delay
-            </li>
-
-            <li>
-              <Truck size={18}/>
-              Customer SLA Risk
-            </li>
-
-            <li>
-              <Truck size={18}/>
-              Revenue Loss
-            </li>
-
-          </ul>
-
-        </div>
-
-        <div className="ripple-card">
-
-          <h2>
-            <Brain size={20}/>
-            AI Recommendation
-          </h2>
-
-          <ol className="recommendation-list">
-
-            <li>Stop Machine A12 immediately.</li>
-
-            <li>Move production to Line B.</li>
-
-            <li>Notify warehouse.</li>
-
-            <li>Increase spare inventory.</li>
-
-            <li>Inform logistics team.</li>
-
-          </ol>
-
-        </div>
-
-      </div>
-
-      <div className="ripple-card">
-
-        <h2>
-          <Clock size={20}/>
-          Ripple Timeline
-        </h2>
-
-        <div className="timeline">
-
-          <div className="timeline-item">
-            <span>08:10</span>
-            <p>Machine Failure Detected</p>
-          </div>
-
-          <div className="timeline-item">
-            <span>08:18</span>
-            <p>Production Halted</p>
-          </div>
-
-          <div className="timeline-item">
-            <span>08:30</span>
-            <p>Inventory Impact</p>
-          </div>
-
-          <div className="timeline-item">
-            <span>08:45</span>
-            <p>Supplier Alert Triggered</p>
-          </div>
-
-          <div className="timeline-item">
-            <span>09:15</span>
-            <p>Recovery Plan Started</p>
-          </div>
-
-        </div>
-
-      </div>
+      <p>{incident?.location}</p>
 
     </div>
+
+  </div>
+
+  <div className="summary-card risk">
+
+    <div className="summary-icon">
+      <Activity size={30} />
+    </div>
+
+    <div>
+
+      <h3>Overall Risk</h3>
+
+      <h2>{data?.analysis?.risk_score}%</h2>
+
+      <p>{data?.analysis?.priority} Impact</p>
+
+    </div>
+
+  </div>
+
+</div>
+
+      <div className="ripple-card">
+
+  <h2>Primary Ripple Effects</h2>
+
+  <div className="impact-list">
+
+    {ripple?.affected_sectors?.map((sector, index) => (
+
+      <div
+        key={index}
+        className="impact-item"
+      >
+
+        <Package size={22} />
+
+        <div>
+
+          <h4>{sector}</h4>
+
+          <p>
+            Ripple Impact #{index + 1}
+          </p>
+
+        </div>
+
+        <ArrowRight size={18} />
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+
+     <div className="two-column">
+
+  <div className="ripple-card">
+
+    <h2>Secondary Effects</h2>
+
+    <ul className="effect-list">
+
+      {ripple?.affected_sectors?.map((sector, index) => (
+
+        <li key={index}>
+
+          <Truck size={18} />
+
+          {sector}
+
+        </li>
+
+      ))}
+
+    </ul>
+
+  </div>
+
+  <div className="ripple-card">
+
+    <h2>
+
+      <Brain size={20} />
+
+      AI Recommendation
+
+    </h2>
+
+    <p>
+
+      {report?.executive_recommendation ||
+       report?.immediate_actions ||
+       "No recommendation available."}
+
+    </p>
+
+  </div>
+
+</div>
+
+      <div className="ripple-card">
+
+  <h2>
+
+    <Clock size={20} />
+
+    Ripple Timeline
+
+  </h2>
+
+  <div className="timeline">
+
+    <div className="timeline-item">
+
+      <span>Step 1</span>
+
+      <p>
+        Incident reported:
+        {" "}
+        {incident?.category}
+      </p>
+
+    </div>
+
+    <div className="timeline-item">
+
+      <span>Step 2</span>
+
+      <p>
+        Risk Level:
+        {" "}
+        {data?.analysis?.priority}
+      </p>
+
+    </div>
+
+    <div className="timeline-item">
+
+      <span>Step 3</span>
+
+      <p>
+        Ripple affected
+        {" "}
+        {ripple?.affected_count}
+        {" "}
+        sectors.
+      </p>
+
+    </div>
+
+    <div className="timeline-item">
+
+      <span>Step 4</span>
+
+      <p>
+        Cross Sector Impact:
+        {" "}
+        {ripple?.cross_sector_impact ? "Yes" : "No"}
+      </p>
+
+    </div>
+
+    <div className="timeline-item">
+
+      <span>Step 5</span>
+
+      <p>
+        AI Recommendation Generated
+      </p>
+
+    </div>
+
+  </div>
+
+  </div>
+  </div>
   );
 }
 
