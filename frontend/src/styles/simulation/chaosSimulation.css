@@ -82,10 +82,12 @@
 }
 
 .summary-card strong{
-    font-size:34px;
-    font-weight:700;
-    color:#0f172a;
-    line-height:1;
+    font-size: 30px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.2;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .summary-card p{

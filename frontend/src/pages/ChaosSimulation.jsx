@@ -28,6 +28,10 @@ function ChaosSimulation() {
   const analysis = data?.analysis;
 
   const firstScenario = chaos?.scenarios?.[0];
+  console.log("Complete Data:", data);
+console.log("Executive Report:", report);
+console.log("Estimated Recovery:", report?.estimated_recovery_time);
+console.log("First Scenario:", firstScenario);
   console.log(data);
 console.log(report);
   return (
@@ -45,14 +49,7 @@ console.log(report);
 
         </div>
 
-        <button className="run-btn">
-
-          <Brain size={18} />
-
-          Generate AI Simulation
-
-        </button>
-
+        
       </div>
 
       <div className="summary-grid">

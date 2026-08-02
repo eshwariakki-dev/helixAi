@@ -101,11 +101,15 @@ function DecisionCenter() {
 </button>
 <button
   className="execute-btn"
-  onClick={() =>
+  onClick={() => {
+
+    console.log("Decision Center Data:", data);
+
     navigate("/chaos-simulation", {
-      state: data,
-    })
-  }
+        state: data,
+    });
+
+}}
 >
   View Chaos Simulation
 </button>
