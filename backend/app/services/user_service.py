@@ -11,7 +11,6 @@ class UserService:
     @staticmethod
     def create_user(db: Session, user: UserCreate):
 
-        # Check if email already exists
         existing_user = (
             db.query(User)
             .filter(User.email == user.email)
@@ -21,7 +20,6 @@ class UserService:
         if existing_user:
             raise ValueError("Email already registered")
 
-        # Hash password
         hashed_password = Security.hash_password(user.password)
 
         new_user = User(
@@ -50,13 +48,27 @@ class UserService:
             .first()
         )
 
+        print("=" * 50)
+        print("LOGIN DEBUG")
+        print("Email:", email)
+        print("User Found:", user is not None)
+
         if not user:
+            print("Reason: User not found")
+            print("=" * 50)
             return None
 
-        if not Security.verify_password(
+        print("Stored Hash:", user.password)
+
+        result = Security.verify_password(
             password,
             user.password
-        ):
+        )
+
+        print("Password Match:", result)
+        print("=" * 50)
+
+        if not result:
             return None
 
         return user

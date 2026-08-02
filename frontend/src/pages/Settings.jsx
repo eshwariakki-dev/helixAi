@@ -1,3 +1,9 @@
+import { useEffect, useState } from "react";
+import {
+  getProfile,
+  updateProfile,
+} from "../api/userApi";
+
 import {
   User,
   Bell,
@@ -8,18 +14,73 @@ import {
 import "../styles/settings/settings.css";
 
 function Settings() {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+
+    const loadProfile = async () => {
+
+      try {
+
+        const user = await getProfile();
+
+        setName(user.name);
+        setEmail(user.email);
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Failed to load profile.");
+
+      }
+
+    };
+
+    loadProfile();
+
+  }, []);
+
+  const handleSave = async () => {
+
+    try {
+
+      await updateProfile({
+        name,
+        email,
+      });
+
+      alert("Profile updated successfully!");
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Failed to update profile.");
+
+    }
+
+  };
+
   return (
     <div className="settings-page">
 
       <div className="settings-header">
+
         <div>
           <h1>Settings</h1>
           <p>Manage your account and HELIX AI preferences.</p>
         </div>
 
-        <button className="save-btn">
+        <button
+          className="save-btn"
+          onClick={handleSave}
+        >
           Save Changes
         </button>
+
       </div>
 
       <div className="settings-grid">
@@ -34,15 +95,19 @@ function Settings() {
           </div>
 
           <label>Name</label>
+
           <input
             type="text"
-            defaultValue="Admin User"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
 
           <label>Email</label>
+
           <input
             type="email"
-            defaultValue="admin@helixai.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
         </div>
@@ -133,7 +198,7 @@ function Settings() {
 
         </div>
 
-        {/* System */}
+        {/* System Information */}
 
         <div className="settings-card">
 

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.init_db import init_db
 
@@ -7,7 +8,7 @@ from app.api.routes.incidents import router as incident_router
 from app.api.routes.dashboard import router as dashboard_router
 from app.api.routes.ai_reports import router as ai_report_router
 from app.api.routes.timeline import router as timeline_router
-from fastapi.middleware.cors import CORSMiddleware
+from app.api.routes.settings import router as settings_router
 
 
 app = FastAPI(
@@ -15,6 +16,7 @@ app = FastAPI(
     description="Connected Decision Intelligence Platform",
     version="1.0.0"
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,12 +35,17 @@ def startup():
     init_db()
 
 
+# ==========================
 # Register Routers
+# ==========================
+
 app.include_router(user_router)
 app.include_router(incident_router)
 app.include_router(dashboard_router)
 app.include_router(ai_report_router)
 app.include_router(timeline_router)
+app.include_router(settings_router)
+
 
 @app.get("/")
 async def root():

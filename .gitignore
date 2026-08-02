@@ -5,11 +5,15 @@
 backend/venv/
 backend/__pycache__/
 backend/**/*.pyc
+backend/.pytest_cache/
+backend/.mypy_cache/
 
 backend/.env
 backend/.env.*
 
 backend/helix.db
+backend/*.db
+backend/*.sqlite3
 
 backend/*.log
 
@@ -33,7 +37,11 @@ frontend/*.local
 # ======================
 
 *.pyc
+*.pyo
+*.pyd
+
 __pycache__/
+
 .pytest_cache/
 .mypy_cache/
 
@@ -42,7 +50,9 @@ __pycache__/
 # ======================
 
 logs/
+
 *.log
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -50,15 +60,44 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # ======================
-# VS Code
+# IDE
 # ======================
 
 .vscode/
 .idea/
 
 # ======================
-# OS Files
+# Operating System
 # ======================
 
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ======================
+# Git
+# ======================
+
+*.swp
+*.swo
+
+# ======================
+# Environment
+# ======================
+
+.env
+.env.*
+
+# ======================
+# Coverage
+# ======================
+
+.coverage
+htmlcov/
+
+# ======================
+# Misc
+# ======================
+
+*.tmp
+*.temp
